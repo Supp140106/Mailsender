@@ -9,21 +9,41 @@ const PORT = process.env.PORT || 5000;
 
 // Middleware
 app.use(cors({
-  origin: "*",        // allow all origins
-  methods: "GET,POST,PUT,DELETE",
-  allowedHeaders: "Content-Type,Authorization"
+    origin: "*",        // allow all origins
+    methods: "GET,POST,PUT,DELETE",
+    allowedHeaders: "Content-Type,Authorization"
 }));
 
 app.use(express.json());
 
 // Nodemailer Transporter
+// Option 1: Gmail with explicit configuration (works on most platforms)
 const transporter = nodemailer.createTransport({
-    service: 'gmail', // You can change this to your preferred email service
+    host: 'smtp.gmail.com',
+    port: 587,
+    secure: false, // true for 465, false for other ports
     auth: {
         user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
+        pass: process.env.EMAIL_PASS, // Use App Password, not regular password
     },
+    tls: {
+        rejectUnauthorized: false
+    },
+    connectionTimeout: 10000, // 10 seconds
+    greetingTimeout: 10000,
+    socketTimeout: 10000,
 });
+
+// Option 2: SendGrid (Uncomment to use - most reliable for Render)
+// const transporter = nodemailer.createTransport({
+//     host: 'smtp.sendgrid.net',
+//     port: 587,
+//     secure: false,
+//     auth: {
+//         user: 'apikey',
+//         pass: process.env.SENDGRID_API_KEY,
+//     },
+// });
 
 // Routes
 app.post('/api/contact', async (req, res) => {
