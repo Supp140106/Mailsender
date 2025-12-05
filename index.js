@@ -19,19 +19,13 @@ app.use(express.json());
 // Nodemailer Transporter
 // Option 1: Gmail with explicit configuration (works on most platforms)
 const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 465,
+    service: "gmail",
     secure: true,
+    port: 465,
     auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS, // Use App Password, not regular password
     },
-    tls: {
-        rejectUnauthorized: false
-    },
-    connectionTimeout: 10000, // 10 seconds
-    greetingTimeout: 10000,
-    socketTimeout: 10000,
 });
 
 // Option 2: SendGrid (Uncomment to use - most reliable for Render)
